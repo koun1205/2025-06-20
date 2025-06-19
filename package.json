@@ -1,5 +1,41 @@
 {
-  "dependencies": {
-    "electron-builder": "^26.0.12"
+  "name": "2222",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "pack": "electron-builder --dir"
+  },
+  "build": {
+    "appId": "com.example.app",
+    "productName": "生氣貓",
+    "directories": {
+      "output": "pack"
+    },
+    "files": [
+      "**/*",
+      "!.vscode",
+      "!.idea",
+      "build/"
+    ],
+    "asar": false,
+    "win": {
+      "icon": "assets/icon.png"
+    },
+    "mac": {
+      "icon": "assets/icon.png"
+    },
+    "linux": {
+      "icon": "assets/icon.png"
+    }
+  },
+  
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "electron": "^36.2.1"
   }
 }

@@ -1,0 +1,82 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+#pet {
+    position: absolute;
+    width: 128px;
+    height: 128px;
+    top: 100px;
+    left: 100px;
+    user-select: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, width 0.3s, height 0.3s, filter 0.5s ease, box-shadow 0.5s ease;
+}
+
+.pulsing {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+.giant {
+    width: 300px !important;
+    height: 300px !important;
+    z-index: 999;
+}
+
+.bouncing {
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-30px); }
+    60% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+#bubble {
+    position: absolute;
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-family: sans-serif;
+    top: 60px;
+    left: 150px;
+    display: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+@keyframes dance {
+    0% { transform: translateX(0) rotate(0deg); }
+    50% { transform: translateX(15px) rotate(15deg); }
+    100% { transform: translateX(0) rotate(0deg); }
+}
+
+/* 加強版發光效果 */
+.glowing {
+    filter:
+            drop-shadow(0 0 6px #FFD700)
+            drop-shadow(0 0 12px #FFD700)
+            drop-shadow(0 0 18px #FFA500);
+    box-shadow:
+            0 0 10px 3px #FFD700,
+            0 0 20px 6px #FFA500;
+    transition: filter 0.5s ease, box-shadow 0.5s ease;
+}

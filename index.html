@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <title>互動桌面寵物</title>
+    <link rel="stylesheet" href="../css.css">
+</head>
+<body>
+
+<img id="pet" src="img/d372de818cd14746bdf8504800ac23fb.gif" alt="桌寵" />
+<div id="bubble">喵嗚～</div>
+<audio id="meow" src="sounds/meow.mp3"></audio>
+<audio id="danceMusic" src="sounds/dance.mp3"></audio>
+
+<script>
+    const pet = document.getElementById('pet');
+    const bubble = document.getElementById('bubble');
+    const meow = document.getElementById('meow');
+    const danceMusic = document.getElementById('danceMusic');
+
+    let x = 100, y = 100, dx = 1, dy = 1;
+    const speed = 1.8;
+    let pulsing = false;
+    let giant = false;
+    let dragging = false;
+    let offsetX = 0, offsetY = 0;
+
+    let sleeping = false;
+    let dancing = false;
+    let glowing = false;
+
+    function animate() {
+        if (!dragging && !sleeping && !dancing) {
+            const maxX = window.innerWidth - pet.offsetWidth;
+            const maxY = window.innerHeight - pet.offsetHeight;
+
+            x += dx * speed;
+            y += dy * speed;
+
+            if (x <= 0 || x >= maxX) dx *= -1;
+            if (y <= 0 || y >= maxY) dy *= -1;
+
+            pet.style.left = x + 'px';
+            pet.style.top = y + 'px';
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    pet.addEventListener('click', () => {
+        if (sleeping) return;
+
+        if (!pulsing) {
+            pulsing = true;
+            pet.classList.add('pulsing');
+        } else {
+            pulsing = false;
+            pet.classList.remove('pulsing');
+            giant = !giant;
+            pet.classList.toggle('giant', giant);
+        }
+
+        meow.currentTime = 0;
+        meow.play();
+
+        showBubble(giant ? "我變大啦！" : "喵嗚～");
+    });
+
+    pet.addEventListener('mouseenter', () => {
+        if (sleeping || dancing) return;
+        pet.classList.add('bouncing');
+        setTimeout(() => pet.classList.remove('bouncing'), 600);
+    });
+
+    pet.addEventListener('mousedown', (e) => {
+        if (sleeping || dancing) return;
+        dragging = true;
+        offsetX = e.clientX - pet.offsetLeft;
+        offsetY = e.clientY - pet.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (dragging) {
+            x = e.clientX - offsetX;
+            y = e.clientY - offsetY;
+            pet.style.left = x + 'px';
+            pet.style.top = y + 'px';
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        dragging = false;
+    });
+
+    function showBubble(text) {
+        bubble.style.left = (x + 100) + "px";
+        bubble.style.top = (y - 30) + "px";
+        bubble.innerText = text;
+        bubble.style.display = "block";
+        setTimeout(() => bubble.style.display = "none", 1500);
+    }
+
+    function feedPet() {
+        if (sleeping) return;
+
+        showBubble("好吃！謝謝你～");
+
+        pet.style.transition = 'transform 0.3s';
+        pet.style.transform = 'scale(1.2)';
+        setTimeout(() => {
+            pet.style.transform = giant ? 'scale(2.34)' : 'scale(1)';
+        }, 300);
+    }
+
+    function toggleSleep() {
+        if (dancing) toggleDance();
+
+        sleeping = !sleeping;
+        if (sleeping) {
+            pet.style.opacity = '0.5';
+            showBubble("Zzz... 睡覺中");
+            pet.style.pointerEvents = 'none';
+        } else {
+            pet.style.opacity = '1';
+            pet.style.pointerEvents = 'auto';
+            showBubble("醒來囉！");
+        }
+    }
+
+    function toggleDance() {
+        if (sleeping) return;
+
+        dancing = !dancing;
+        if (dancing) {
+            pet.style.animation = 'dance 0.6s ease-in-out infinite alternate';
+            danceMusic.loop = true;
+            danceMusic.currentTime = 0;
+            danceMusic.play();
+            showBubble("跳舞時間！🎵");
+        } else {
+            pet.style.animation = '';
+            danceMusic.pause();
+            danceMusic.currentTime = 0;
+            showBubble("跳舞結束！");
+        }
+    }
+
+    function toggleGlow() {
+        glowing = !glowing;
+        pet.classList.toggle('glowing', glowing);
+        showBubble(glowing ? "發光中✨" : "熄滅囉");
+    }
+
+    document.addEventListener('keydown', (e) => {
+        const step = 20;
+
+        if (sleeping && e.key.toUpperCase() !== 'S') return;
+
+        switch (e.key.toUpperCase()) {
+            case 'ARROWUP': y = Math.max(0, y - step); break;
+            case 'ARROWDOWN': y = Math.min(window.innerHeight - pet.offsetHeight, y + step); break;
+            case 'ARROWLEFT': x = Math.max(0, x - step); break;
+            case 'ARROWRIGHT': x = Math.min(window.innerWidth - pet.offsetWidth, x + step); break;
+            case 'F': feedPet(); return;
+            case 'S': toggleSleep(); return;
+            case 'D': toggleDance(); return;
+            case 'G': toggleGlow(); return;
+            default: return;
+        }
+        pet.style.left = x + 'px';
+        pet.style.top = y + 'px';
+    });
+</script>
+
+</body>
+</html>
